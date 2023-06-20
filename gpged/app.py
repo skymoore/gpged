@@ -75,7 +75,7 @@ class GPGED(QWidget):
         selected_key = self.key_select.currentText()
         plaintext = self.input_entry.toPlainText().strip()
         if selected_key == "Public Key Input":
-            public_key = self.public_key_input.text().strip()
+            public_key = self.public_key_input.toPlainText().strip()
             import_result = self.gpg.import_keys(public_key)
             if import_result.count != 1:
                 self.output_entry.setText("Failed to import public key")
