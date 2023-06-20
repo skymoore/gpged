@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import (
     QTextEdit,
     QLabel,
     QComboBox,
+    QApplication
 )
 import gnupg
 
@@ -19,17 +20,24 @@ class GPGED(QWidget):
         self.key_select = QComboBox()
         self.populate_keys()
 
+        self.clipboard = QApplication.clipboard()
         self.input_entry = QTextEdit()
         self.output_entry = QTextEdit()
         self.encrypt_button = QPushButton("Encrypt", self)
         self.decrypt_button = QPushButton("Decrypt", self)
         self.refresh_button = QPushButton("Refresh", self)
+        self.paste_input_button = QPushButton("Paste", self)
+        self.paste_public_key_button = QPushButton("Paste", self)
+        self.copy_output_button = QPushButton("Copy", self)
         self.public_key_input_label = QLabel("Public Key:")
         self.public_key_input = QTextEdit()
 
         self.encrypt_button.clicked.connect(self.encrypt)
         self.decrypt_button.clicked.connect(self.decrypt)
         self.refresh_button.clicked.connect(self.refresh)
+        self.paste_input_button.clicked.connect(self.paste_input)
+        self.paste_public_key_button.clicked.connect(self.paste_public_key)
+        self.copy_output_button.clicked.connect(self.copy_output)
         self.key_select.currentTextChanged.connect(self.handle_dropdown)
 
         vbox = QVBoxLayout()
@@ -40,30 +48,34 @@ class GPGED(QWidget):
         vbox.addLayout(hbox)
         vbox.addWidget(self.public_key_input_label)
         vbox.addWidget(self.public_key_input)
+        vbox.addWidget(self.paste_public_key_button)
         vbox.addWidget(QLabel("Message/Ciphertext:"))
         vbox.addWidget(self.input_entry)
+        vbox.addWidget(self.paste_input_button)
         vbox.addWidget(self.encrypt_button)
         vbox.addWidget(self.decrypt_button)
         vbox.addWidget(QLabel("Output:"))
         vbox.addWidget(self.output_entry)
+        vbox.addWidget(self.copy_output_button)
 
         self.setLayout(vbox)
         self.setWindowTitle("PGP Encrypt/Decrypt")
         self.setGeometry(300, 300, 300, 200)
-        # self.public_key_input.hide()  # Hide initially
         self.show()
 
     def handle_dropdown(self, text):
         if text == "Public Key Input":
             self.public_key_input_label.show()
             self.public_key_input.show()
+            self.paste_public_key_button.show()
         else:
             self.public_key_input_label.hide()
             self.public_key_input.hide()
+            self.paste_public_key_button.hide()
 
     def populate_keys(self):
         self.key_select.clear()
-        self.key_select.addItem("Public Key Input")  # Add public key input option
+        self.key_select.addItem("Public Key Input")
         public_keys = self.gpg.list_keys()
         for key in public_keys:
             if len(key["uids"]) > 0:
@@ -101,3 +113,12 @@ class GPGED(QWidget):
 
     def refresh(self):
         self.populate_keys()
+
+    def paste_input(self):
+        self.input_entry.setText(self.clipboard.text())
+
+    def paste_public_key(self):
+        self.public_key_input.setText(self.clipboard.text())
+
+    def copy_output(self):
+        self.clipboard.setText(self.output_entry.toPlainText())
