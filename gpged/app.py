@@ -25,10 +25,13 @@ class GPGED(QWidget):
         self.output_entry = QTextEdit()
         self.encrypt_button = QPushButton("Encrypt", self)
         self.decrypt_button = QPushButton("Decrypt", self)
-        self.refresh_button = QPushButton("Refresh", self)
+        self.refresh_button = QPushButton("Load Keys", self)
         self.paste_input_button = QPushButton("Paste", self)
         self.paste_public_key_button = QPushButton("Paste", self)
         self.copy_output_button = QPushButton("Copy", self)
+        self.clear_input_button = QPushButton("Clear", self)
+        self.clear_public_key_button = QPushButton("Clear", self)
+        self.clear_output_button = QPushButton("Clear", self)
         self.public_key_input_label = QLabel("Public Key:")
         self.public_key_input = QTextEdit()
 
@@ -38,25 +41,39 @@ class GPGED(QWidget):
         self.paste_input_button.clicked.connect(self.paste_input)
         self.paste_public_key_button.clicked.connect(self.paste_public_key)
         self.copy_output_button.clicked.connect(self.copy_output)
+        self.clear_input_button.clicked.connect(self.clear_input)
+        self.clear_public_key_button.clicked.connect(self.clear_public_key)
+        self.clear_output_button.clicked.connect(self.clear_output)
         self.key_select.currentTextChanged.connect(self.handle_dropdown)
 
         vbox = QVBoxLayout()
-        hbox = QHBoxLayout()
-        hbox.addWidget(QLabel("Select Key:"))
-        hbox.addWidget(self.key_select)
-        hbox.addWidget(self.refresh_button)
-        vbox.addLayout(hbox)
+        hbox_key_select = QHBoxLayout()
+        hbox_key_select.addWidget(QLabel("Select Key:"))
+        hbox_key_select.addWidget(self.key_select)
+        hbox_key_select.addWidget(self.refresh_button)
+        vbox.addLayout(hbox_key_select)
         vbox.addWidget(self.public_key_input_label)
         vbox.addWidget(self.public_key_input)
-        vbox.addWidget(self.paste_public_key_button)
+        hbox_public_key = QHBoxLayout()
+        hbox_public_key.addWidget(self.paste_public_key_button)
+        hbox_public_key.addWidget(self.clear_public_key_button)
+        vbox.addLayout(hbox_public_key)
         vbox.addWidget(QLabel("Message/Ciphertext:"))
         vbox.addWidget(self.input_entry)
-        vbox.addWidget(self.paste_input_button)
-        vbox.addWidget(self.encrypt_button)
-        vbox.addWidget(self.decrypt_button)
+        hbox_input = QHBoxLayout()
+        hbox_input.addWidget(self.paste_input_button)
+        hbox_input.addWidget(self.clear_input_button)
+        vbox.addLayout(hbox_input)
+        hbox_enc_dec = QHBoxLayout()
+        hbox_enc_dec.addWidget(self.encrypt_button)
+        hbox_enc_dec.addWidget(self.decrypt_button)
+        vbox.addLayout(hbox_enc_dec)
         vbox.addWidget(QLabel("Output:"))
         vbox.addWidget(self.output_entry)
-        vbox.addWidget(self.copy_output_button)
+        hbox_output = QHBoxLayout()
+        hbox_output.addWidget(self.copy_output_button)
+        hbox_output.addWidget(self.clear_output_button)
+        vbox.addLayout(hbox_output)
 
         self.setLayout(vbox)
         self.setWindowTitle("PGP Encrypt/Decrypt")
@@ -68,20 +85,28 @@ class GPGED(QWidget):
             self.public_key_input_label.show()
             self.public_key_input.show()
             self.paste_public_key_button.show()
+            self.clear_public_key_button.show()
         else:
             self.public_key_input_label.hide()
             self.public_key_input.hide()
             self.paste_public_key_button.hide()
+            self.clear_public_key_button.hide()
 
     def populate_keys(self):
+        current_selection = self.key_select.currentText()
         self.key_select.clear()
         self.key_select.addItem("Public Key Input")
         public_keys = self.gpg.list_keys()
+
         for key in public_keys:
             if len(key["uids"]) > 0:
                 self.key_select.addItem(key["uids"][0])
             else:
                 self.key_select.addItem(key["fingerprint"][-6:])
+        try:
+            self.key_select.setCurrentText(current_selection)
+        except Exception:
+            self.key_select.setCurrentIndex(0)
 
     def encrypt(self):
         selected_key = self.key_select.currentText()
@@ -122,3 +147,12 @@ class GPGED(QWidget):
 
     def copy_output(self):
         self.clipboard.setText(self.output_entry.toPlainText())
+
+    def clear_input(self):
+        self.input_entry.clear()
+
+    def clear_public_key(self):
+        self.public_key_input.clear()
+
+    def clear_output(self):
+        self.output_entry.clear()
