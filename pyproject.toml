@@ -2,13 +2,13 @@
 requires = ["setuptools", "wheel"]
 
 [project]
-name = "gpg-encrypt-decrypt-gui"
-version = "0.0.1"
+name = "gpged"
+version = "0.0.2"
 description = "GUI for encrypting and decrypting text with GPG."
 readme = "README.md"
 authors = [{name = "Sky Moore", email = "i@msky.me"}]
 license = {file = "LICENSE"}
-keywords = ["gpg"]
+keywords = ["gpg","gnupg", "pgp", "gui", "encryption", "decryption", "cryptography"]
 classifiers = [
   "Intended Audience :: Developers",
   "Natural Language :: English",

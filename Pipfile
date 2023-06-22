@@ -6,6 +6,10 @@ name = "pip_conf_index_global"
 [packages]
 python-gnupg = ">=0.5.0"
 pyqt6 = ">=6.5.1"
+fuzzywuzzy = ">=0.18.0"
+python_Levenshtein = ">=0.21.1"
+gpged = {path = "."}
+
 
 [dev-packages]
 
