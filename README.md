@@ -14,8 +14,8 @@ pip install .
 ## Run gpged
 `gpged`
 ### Nice UI  
-![layout](https://github.com/skymoore/gpged/blob/main/images/layout.png?raw=true)
+![layout](https://github.com/skymoore/gpged/blob/main/gpged/images/layout.png?raw=true)
 ### Encrypt with multiple public keys  
-![multi-key select](https://github.com/skymoore/gpged/blob/main/images/multi_key_select.png?raw=true)
+![multi-key select](https://github.com/skymoore/gpged/blob/main/gpged/images/multi_key_select.png?raw=true)
 ### Decrypt messages  
-![decypted message](https://github.com/skymoore/gpged/blob/main/images/decrypted_message.png?raw=true)
+![decypted message](https://github.com/skymoore/gpged/blob/main/gpged/images/decrypted_message.png?raw=true)

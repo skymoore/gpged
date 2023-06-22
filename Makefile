@@ -4,11 +4,12 @@
 
 sdist:
 	@echo "Building source distribution..."
-	python3 setup.py sdist
+	python3 -m build --sdist
 
 publish: sdist
 	@echo "Publishing to pypi..."
-	twine upload dist/*
+	@echo "Use PyPI api token for password!"
+	twine upload dist/* -u __token__
 	rm -rf dist
 
 install:

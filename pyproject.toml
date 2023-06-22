@@ -17,3 +17,8 @@ classifiers = [
 
 [project.gui-scripts]
 gpged = "gpged.__main__:main"
+
+[options]
+py_modules = ["gpged"]
+packages = ["gpged"]
+include_package_data = true
