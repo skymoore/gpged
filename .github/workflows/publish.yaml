@@ -23,7 +23,7 @@ jobs:
           pipenv sync
       - name: Build package
         run: |
-          python -m build --sdist
+          pyproject-build --sdist
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@v1.8.6
         with:
