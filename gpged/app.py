@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import (
+from PyQt5.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import (
     QApplication,
     QListWidget,
     QLineEdit,
+    QAbstractItemView,
 )
 from fuzzywuzzy import fuzz
 import gnupg
@@ -23,7 +24,7 @@ class GPGED(QWidget):
         self.clipboard = QApplication.clipboard()
 
         self.key_list_widget = QListWidget()
-        self.key_list_widget.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
+        self.key_list_widget.setSelectionMode(QAbstractItemView.MultiSelection)
         self.keys = {}
         self.populate_keys_list()
         self.key_search = QLineEdit()
