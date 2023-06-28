@@ -6,10 +6,12 @@ default: build
 
 build:
 	@echo "Building..."
-	pyinstaller gpged/__main__.py --collect-all gpged --hidden-import sip --onefile --name gpged --windowed --target-arch arm64
+	pyinstaller gpged/__main__.py --collect-all gpged --hidden-import sip --onefile --name gpged --icon gpged/images/gnupg.icns --windowed --target-arch arm64
+	python3 gpged/update_plist.py
 
 build-x86:
-	pyinstaller gpged/__main__.py --collect-all gpged --hidden-import sip --onefile --name gpged.x86_64 --windowed	--target-arch x86_64
+	pyinstaller gpged/__main__.py --collect-all gpged --hidden-import sip --onefile --name gpged.x86_64 --icon gpged/images/gnupg.icns --windowed	--target-arch x86_64
+	python3 gpged/update_plist.py
 
 build-debug:
 	@echo "Building..."
