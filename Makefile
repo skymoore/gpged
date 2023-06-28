@@ -2,6 +2,20 @@
 
 .PHONY: sdist publish install
 
+default: build
+
+build:
+	@echo "Building..."
+	pyinstaller gpged/__main__.py --collect-all gpged --onefile --name gpged --windowed
+
+build-debug:
+	@echo "Building..."
+	pyinstaller gpged/__main__.py --collect-all gpged --onefile --name gpged --console
+
+clean:
+	@echo "Cleaning..."
+	rm -rf build dist
+
 sdist:
 	@echo "Building source distribution..."
 	python3 -m build --sdist
