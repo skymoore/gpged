@@ -37,6 +37,9 @@ install-pyqt5:
 	@echo "Installing PyQt5..."
 	cp -r /opt/homebrew/opt/pyqt@5/lib/python3.11/site-packages/* venv/lib/python3.11/site-packages
 
+dependencies:
+	pipenv install --skip-lock
+
 lock:
 	@echo "Locking dependencies..."
 	pipenv lock
