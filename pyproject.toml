@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 
 [project]
 name = "gpged"
-version = "0.0.4"
+version = "0.0.5"
 description = "GUI for encrypting and decrypting text with GPG."
 readme = "README.md"
 authors = [{name = "Sky Moore", email = "i@msky.me"}]
