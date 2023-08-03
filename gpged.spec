@@ -3,7 +3,7 @@ from PyInstaller.utils.hooks import collect_all
 
 datas = []
 binaries = []
-hiddenimports = []
+hiddenimports = ['sip']
 tmp_ret = collect_all('gpged')
 datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
 
@@ -42,10 +42,17 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=True,
+    console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
-    target_arch=None,
+    target_arch='arm64',
     codesign_identity=None,
     entitlements_file=None,
+    icon=['gpged/images/gnupg.icns'],
+)
+app = BUNDLE(
+    exe,
+    name='gpged.app',
+    icon='gpged/images/gnupg.icns',
+    bundle_identifier=None,
 )

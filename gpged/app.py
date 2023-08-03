@@ -32,6 +32,8 @@ class GPGED(QWidget):
         self.input_entry = QTextEdit()
         self.output_entry = QTextEdit()
         self.encrypt_button = QPushButton("Encrypt", self)
+        self.clear_sign_button = QPushButton("Clear Sign", self)
+        self.verify_signature_botton = QPushButton("Verify Signature", self)
         self.decrypt_button = QPushButton("Decrypt", self)
         self.refresh_button = QPushButton("Load Keys", self)
         self.paste_input_button = QPushButton("Paste", self)
@@ -43,6 +45,8 @@ class GPGED(QWidget):
         self.key_search.textChanged.connect(self.filter_items)
         self.clear_key_list_selection_button.clicked.connect(self.clear_selection)
         self.encrypt_button.clicked.connect(self.encrypt)
+        self.clear_sign_button.clicked.connect(self.clear_sign)
+        self.verify_signature_botton.clicked.connect(self.verify_signature)
         self.decrypt_button.clicked.connect(self.decrypt)
         self.refresh_button.clicked.connect(self.refresh)
         self.paste_input_button.clicked.connect(self.paste_input)
@@ -72,7 +76,11 @@ class GPGED(QWidget):
         hbox_enc_dec = QHBoxLayout()
         hbox_enc_dec.addWidget(self.encrypt_button)
         hbox_enc_dec.addWidget(self.decrypt_button)
+        hbox_sign_verify = QHBoxLayout()
+        hbox_sign_verify.addWidget(self.clear_sign_button)
+        hbox_sign_verify.addWidget(self.verify_signature_botton)
         vbox.addLayout(hbox_enc_dec)
+        vbox.addLayout(hbox_sign_verify)
         vbox.addWidget(QLabel("Output:"))
         vbox.addWidget(self.output_entry)
         hbox_output = QHBoxLayout()
@@ -148,6 +156,32 @@ class GPGED(QWidget):
             return
 
         self.output_entry.setText(str(decrypted_data))
+
+    def clear_sign(self):
+        selected_keys = [
+            self.keys[key]
+            for key in [item.text() for item in self.key_list_widget.selectedItems()]
+        ]
+        plaintext = self.input_entry.toPlainText().strip()
+        signed_data = self.gpg.sign(plaintext, clearsign=True)
+        if signed_data.status != "signature created":
+            self.output_entry.setText(f"Failed to sign message:\n{signed_data.stderr}")
+            return
+
+        self.output_entry.setText(str(signed_data))
+
+    def verify_signature(self):
+        signature = self.input_entry.toPlainText().strip()
+        verified_data = self.gpg.verify(signature)
+        if not verified_data.valid:
+            self.output_entry.setText(
+                f"Failed to verify signature:\n{verified_data.stderr}"
+            )
+            return
+        self.output_entry.setText(
+            f"Signature verified:\n{verified_data.username} - {verified_data.key_id}\n\
+              {verified_data.stderr}"
+        )
 
     def refresh(self):
         self.populate_keys_list()
