@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import (
     QListWidget,
     QLineEdit,
     QAbstractItemView,
+    QMessageBox,
 )
 from fuzzywuzzy import fuzz
 import gnupg
@@ -17,10 +18,20 @@ import gnupg
 class GPGED(QWidget):
     def __init__(self):
         super().__init__()
+        try:
+            self.gpg = gnupg.GPG()
+        except Exception as e:
+            app_path = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+            QMessageBox.critical(
+                self,
+                "GnuPG is not available",
+                f"Please install GnuPG and make sure the gpg executabale is available in one of these directories: {', '.join(app_path.split(':'))}",
+            )
+            return
+
         self.initUI()
 
     def initUI(self):
-        self.gpg = gnupg.GPG()
         self.clipboard = QApplication.clipboard()
 
         self.key_list_widget = QListWidget()
